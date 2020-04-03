@@ -60,7 +60,7 @@ router.route('/user')
     });
   })
 
-  router.route('/job')
+router.route('/job')
   .get(function (req, res) {
     job.findAll().then(response => {
         // console.log("All users:", JSON.stringify(users, null, 4));
@@ -72,12 +72,14 @@ router.route('/user')
       })
     });
   })
+
   .post(function (req, res) {
     job.create({
         name: 'req.body.name',
-        email: 'req.body.email',
-        password: 'req.body.password',
-        is_admin: false
+        description: 'req.body.email',
+        user_id: 1,
+        status: false,
+        expiry_date: "2020-04-03T13:15:52.170Z"
     })
     .then(response => {
         res.json({
@@ -85,6 +87,62 @@ router.route('/user')
           message: "success",
           data: response
         })
+    })
+  })
+
+  .put(function (req, res) {
+    // job.findByPk(req.body.id)
+    job.update({
+      name: 'req.body.nameUpdated4',
+      description: 'req.body.email',
+      user_id: 2,
+      status: false,
+      expiry_date: "2020-04-03T13:15:52.170Z"
+    },
+    {
+      where: {
+        id: 4
+      }
+    })
+    .then(response => {
+      res.json({
+        status: "success",
+        message: "success",
+        data: response
+      })
+    })
+
+  })
+
+  .delete(function (req, res, next) {
+    job.destroy({
+      where: {
+        id: 3
+      }
+    })
+    .then(response => {
+      res.json({
+        status: "success",
+        message: "success",
+        data: response
+      })
+    })
+    // next(new Error('not implemented'))
+  })
+
+  router.get('/jobFind', function (req, res, next) {
+    console.log(req.body)
+    job.findByPk(2)
+    .then(response => {
+      response != null ? res.status(200).json({
+        status: "success",
+        message: "success",
+        data: response
+      }): res.status(401).send({
+        status: "failed",
+        message: "Unauthenticated",
+      });
     });
   })
+
 module.exports = router;
